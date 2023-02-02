@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import "dart:async";
+import 'package:intl/intl.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -25,22 +26,27 @@ class MyWidget extends StatefulWidget {
 }
 
 class _MyWidgetState extends State<MyWidget> {
-  String year="";
-   
+  String weekday = "";
+  String date = "";
+  String timenow = "";
 
-  fahad(){
+  fahad() {
     Timer.periodic(Duration(seconds: 1), (timer) {
-    setState(() {
-      year=DateTime.now().year.toString();
-    });
+      setState(() {
+        weekday = "";
+        date = "";
+        timenow = "";
+      });
     });
   }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     fahad();
   }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -54,18 +60,29 @@ class _MyWidgetState extends State<MyWidget> {
       ),
       // ignore: prefer_const_literals_to_create_immutables
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [Text(" اليوم/",style: TextStyle(fontSize: 33),),
-          SizedBox(),
-          Text("11 / 10 / $year",style: TextStyle(fontSize: 33),),
-           SizedBox(),
-            Text("11 : 44 : 33",style: TextStyle(fontSize: 33),)
-          ],
-
-          
-          
-          
+        child: Container(
+          height: 5700,
+          width: 5700,
+          color: Colors.black,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                " اليوم/weekday",
+                style: TextStyle(fontSize: 33, color: Colors.red),
+              ),
+              SizedBox(),
+              Text(
+                date,
+                style: TextStyle(fontSize: 33, color: Colors.red),
+              ),
+              SizedBox(),
+              Text(
+                timenow,
+                style: TextStyle(fontSize: 33, color: Colors.red),
+              )
+            ],
+          ),
         ),
       ),
     );

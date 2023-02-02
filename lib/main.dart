@@ -33,9 +33,9 @@ class _MyWidgetState extends State<MyWidget> {
   fahad() {
     Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
-        weekday = "";
-        date = "";
-        timenow = "";
+        weekday = DateFormat("EEEE").format(DateTime.now());
+        date = DateFormat.yMd().format(DateTime.now());
+        timenow =DateFormat.jms().format(DateTime.now()) ;
       });
     });
   }
@@ -68,7 +68,7 @@ class _MyWidgetState extends State<MyWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                " اليوم/weekday",
+                " $weekday",
                 style: TextStyle(fontSize: 33, color: Colors.red),
               ),
               SizedBox(),

@@ -32,9 +32,10 @@ class _MyWidgetState extends State<MyWidget> {
   String timenow = "";
   int mun = 7;
   Timer? returnfuchn;
-
+  Duration duration = Duration(seconds: 0);
+  bool isrunig = false;
   fahad() {
-     Timer.periodic(Duration(seconds: 1), (timer) {
+    Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
         weekday = DateFormat("EEEE").format(DateTime.now());
         date = DateFormat.yMd().format(DateTime.now());
@@ -42,27 +43,20 @@ class _MyWidgetState extends State<MyWidget> {
       });
     });
   }
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     fahad();
   }
-
   starttimre() {
-    returnfuchn=Timer.periodic(Duration(seconds: 1), (timer) {
+    returnfuchn = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
-       
-        if (mun>0) {
-          mun--;
-        }else{
-          timer.cancel();
-        }
+        int nwoSeconds = duration.inSeconds + 1;
+        duration = Duration(seconds: nwoSeconds);
       });
     });
   }
-
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -70,15 +64,15 @@ class _MyWidgetState extends State<MyWidget> {
           title: Center(
             child: Text(
               "  الساعه الرقمية",
-              style: TextStyle(fontSize: 30,color: Color.fromARGB(255, 15, 196, 64)),
+              style: TextStyle(
+                  fontSize: 30, color: Color.fromARGB(255, 15, 196, 64)),
             ),
           ),
         ),
         // ignore: prefer_const_literals_to_create_immutables
         body: Container(
-          color: Colors.black,
-          child: Column(
-            children: [
+            color: Colors.black,
+            child: Column(children: [
               Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -100,78 +94,185 @@ class _MyWidgetState extends State<MyWidget> {
                   ],
                 ),
               ),
-              // -------------------------------------------------------------
+              // ///////////////////////////////////////////
               SizedBox(
-                height: 100,
+                height: 80,
               ),
-              Container(
-                color: Colors.black,
-                child: Column(
-                  children: [
-                    Text(
-                      mun.toString().padLeft(2, "0"),
-                      style: TextStyle(
-                          fontSize: 27,
+              Row(
+                children: [
+                  SizedBox(
+                    width: 60,
+                  ),
+                  Column(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(bottom: 22),
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
                           color: Colors.white,
-                          backgroundColor: Colors.black),
-                    ),
-                    SizedBox(height: 50),
-                    Text((mun>0)? " باقي":   "تم😍",
-                        style: TextStyle(
-                          fontSize: 27,
-                          color: Colors.white,
-                        )),
-                    SizedBox(height: 50),
-                    Container(
-                      color: Colors.black,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              starttimre();
-                             if ( mun==0 ) {
-                             setState(() {
-                                mun=7;
-                             });
-                               
-                             } 
-                            },
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  Color.fromARGB(255, 89, 65, 211)),
-                              padding: MaterialStateProperty.all(
-                                  EdgeInsets.symmetric(
-                                      horizontal: 40, vertical: 10)),
-                              shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(9))),
-                            ),
-                            child: Text("ابدا"),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Text(
+                          duration.inHours
+                              .remainder(99)
+                              .toString()
+                              .padLeft(2, "0"),
+                          style: TextStyle(
+                            fontSize: 50,
                           ),
-                          SizedBox(width: 50),
-                          ElevatedButton(
-                            onPressed: () {returnfuchn!.cancel();},
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  Color.fromARGB(255, 189, 31, 31)),
-                              padding: MaterialStateProperty.all(
-                                  EdgeInsets.symmetric(
-                                      horizontal: 40, vertical: 10)),
-                              shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(9))),
-                            ),
-                            child: Text("ايقاف"),
-                          )
-                        ],
+                        ),
                       ),
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-        ));
+                      Text(
+                        "الساعات",
+                        style: TextStyle(fontSize: 22, color: Colors.white),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    width: 33,
+                  ),
+                  Column(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(bottom: 22),
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Text(
+                          duration.inMinutes
+                              .remainder(60)
+                              .toString()
+                              .padLeft(2, "0"),
+                          style: TextStyle(
+                            fontSize: 50,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        "الدقائق",
+                        style: TextStyle(fontSize: 22, color: Colors.white),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    width: 33,
+                  ),
+                  Column(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(bottom: 22),
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Text(
+                          duration.inSeconds
+                              .remainder(60)
+                              .toString()
+                              .padLeft(2, "0"),
+                          style: TextStyle(
+                            fontSize: 50,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        "الثواني",
+                        style: TextStyle(fontSize: 22, color: Colors.white),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 33,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  isrunig
+                      ? Row(
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  if (returnfuchn!.isActive) {
+                                    returnfuchn!.cancel();
+                                  } else {
+                                    starttimre();
+                                  }
+                                });
+                              },
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    Color.fromARGB(255, 197, 25, 97)),
+                                padding: MaterialStateProperty.all(
+                                    EdgeInsets.all(14)),
+                                shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(9))),
+                              ),
+                              child: Text(
+                                (returnfuchn!.isActive)
+                                    ? "ايقاف الوقت "
+                                    : "تكملة",
+                                style: TextStyle(fontSize: 19),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 35,
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  isrunig = false;
+
+                                  duration = Duration(seconds: 0);
+                                });
+                              },
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    Color.fromARGB(255, 197, 25, 97)),
+                                padding: MaterialStateProperty.all(
+                                    EdgeInsets.all(14)),
+                                shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(9))),
+                              ),
+                              child: Text(
+                                "الغاء",
+                                style: TextStyle(fontSize: 19),
+                              ),
+                            ),
+                          ],
+                        )
+                      : ElevatedButton(
+                          onPressed: () {
+                            starttimre();
+                            setState(() {
+                              isrunig = true;
+                            });
+                          },
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                Color.fromARGB(255, 25, 120, 197)),
+                            padding:
+                                MaterialStateProperty.all(EdgeInsets.all(14)),
+                            shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(9))),
+                          ),
+                          child: Text(
+                            "ابد ",
+                            style: TextStyle(fontSize: 19),
+                          ),
+                        ),
+                ],
+              ),
+            ])));
   }
 }

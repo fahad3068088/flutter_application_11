@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import "dart:async";
 import 'package:intl/intl.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,7 +33,7 @@ class _MyWidgetState extends State<MyWidget> {
   String timenow = "";
   int mun = 7;
   Timer? returnfuchn;
-  Duration duration = Duration(seconds: 0);
+  Duration duration = Duration(minutes: 25);
   bool isrunig = false;
   fahad() {
     Timer.periodic(Duration(seconds: 1), (timer) {
@@ -43,20 +44,30 @@ class _MyWidgetState extends State<MyWidget> {
       });
     });
   }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     fahad();
   }
+
   starttimre() {
-    returnfuchn = Timer.periodic(Duration(seconds: 1), (timer) {
+    returnfuchn = Timer.periodic(Duration(microseconds: 1), (timer) {
       setState(() {
-        int nwoSeconds = duration.inSeconds + 1;
+        int nwoSeconds = duration.inSeconds - 1;
         duration = Duration(seconds: nwoSeconds);
+        if (duration.inSeconds == 0) {
+          timer.cancel();
+          setState(() {
+            duration = Duration(minutes: 25);
+            isrunig = false;
+          });
+        }
       });
     });
   }
+
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -71,7 +82,7 @@ class _MyWidgetState extends State<MyWidget> {
         ),
         // ignore: prefer_const_literals_to_create_immutables
         body: Container(
-            color: Colors.black,
+            color: Colors.white,
             child: Column(children: [
               Center(
                 child: Column(
@@ -99,90 +110,25 @@ class _MyWidgetState extends State<MyWidget> {
                 height: 80,
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    width: 60,
-                  ),
-                  Column(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(bottom: 22),
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Text(
-                          duration.inHours
-                              .remainder(99)
-                              .toString()
-                              .padLeft(2, "0"),
-                          style: TextStyle(
-                            fontSize: 50,
-                          ),
-                        ),
+                  CircularPercentIndicator(
+                    radius: 100.0,
+                    center: Text(
+                      "${duration.inMinutes.remainder(60).toString().padLeft(2, "0")}:${duration.inSeconds.remainder(60).toString().padLeft(2, "0")}",
+                      style: TextStyle(
+                        fontSize: 50,
                       ),
-                      Text(
-                        "الساعات",
-                        style: TextStyle(fontSize: 22, color: Colors.white),
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    width: 33,
-                  ),
-                  Column(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(bottom: 22),
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Text(
-                          duration.inMinutes
-                              .remainder(60)
-                              .toString()
-                              .padLeft(2, "0"),
-                          style: TextStyle(
-                            fontSize: 50,
-                          ),
-                        ),
-                      ),
-                      Text(
-                        "الدقائق",
-                        style: TextStyle(fontSize: 22, color: Colors.white),
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    width: 33,
-                  ),
-                  Column(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(bottom: 22),
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Text(
-                          duration.inSeconds
-                              .remainder(60)
-                              .toString()
-                              .padLeft(2, "0"),
-                          style: TextStyle(
-                            fontSize: 50,
-                          ),
-                        ),
-                      ),
-                      Text(
-                        "الثواني",
-                        style: TextStyle(fontSize: 22, color: Colors.white),
-                      )
-                    ],
+                    ),
+                    progressColor: Color.fromARGB(255, 255, 85, 113),
+                    backgroundColor: Colors.grey,
+                    lineWidth: 5.0,
+                    percent: duration.inMinutes / 25,
+                    animation: true,
+                    animateFromLastPercent: true,
+                    animationDuration: 1000,
+                   circularStrokeCap: CircularStrokeCap.butt,
+
                   ),
                 ],
               ),
@@ -229,8 +175,9 @@ class _MyWidgetState extends State<MyWidget> {
                               onPressed: () {
                                 setState(() {
                                   isrunig = false;
+                                  returnfuchn!.cancel();
 
-                                  duration = Duration(seconds: 0);
+                                  duration = Duration(minutes: 25);
                                 });
                               },
                               style: ButtonStyle(
@@ -273,6 +220,8 @@ class _MyWidgetState extends State<MyWidget> {
                         ),
                 ],
               ),
+
+              /// ////////////////////////////////////////////////
             ])));
   }
 }
